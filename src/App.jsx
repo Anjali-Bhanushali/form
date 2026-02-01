@@ -1,22 +1,50 @@
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 const App = () => {
-
-  const [fullName, setfullName] = useState('')
-  const [email, setemail] = useState('')
-  const [password, setpassword] = useState('')
-  const [confirmpassword, setconfirmpassword] = useState('')
-
+  const [fullName, setfullName] = useState("");
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const [confirmpassword, setconfirmpassword] = useState("");
+  const [error, setError] = useState("");
 
   const submitHandler = (e) => {
-    e.preventDefault()
-    console.log(fullName,email,password,confirmpassword)
+    e.preventDefault();
+    console.log(fullName, email, password, confirmpassword);
 
-    setfullName('')
-    setemail('')
-    setpassword('')
-    setconfirmpassword('')
-  }
+    if (password.length < 8) {
+      setError("Password must be 8 character long");
+      return;
+    }
+    if (password != confirmpassword) {
+      setError("Password and confirmpassword must same");
+      return;
+    }
+    if (!/[!@#$%^&*<>,.]/.test(password)) {
+      setError("password must contains any special character");
+      return;
+    }
+    if (!/[A-Z]/.test(password)) {
+      setError("password must contains any capital letter");
+      return;
+    }
+
+    setError("");
+    setfullName("");
+    setemail("");
+    setpassword("");
+    setconfirmpassword("");
+    toast.success('✅Login Successfull', {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark"
+    });
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-100 to-emerald-300 flex items-center justify-center">
       <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md">
@@ -24,18 +52,22 @@ const App = () => {
           Create Account
         </h2>
 
-        <form onSubmit={(e) => {
-          submitHandler(e)
-        }} className="flex flex-col gap-4">
+        <form
+          onSubmit={(e) => {
+            submitHandler(e);
+          }}
+          className="flex flex-col gap-4"
+        >
           <div>
             <label className="text-sm font-medium">Full Name</label>
             <input
               type="text"
               placeholder="Enter your name"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              required
               value={fullName}
-              onChange={(e) =>{
-                setfullName(e.target.value)
+              onChange={(e) => {
+                setfullName(e.target.value);
               }}
             />
           </div>
@@ -46,9 +78,10 @@ const App = () => {
               type="email"
               placeholder="Enter your email"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-               value={email}
-              onChange={(e) =>{
-                setemail(e.target.value)
+              required
+              value={email}
+              onChange={(e) => {
+                setemail(e.target.value);
               }}
             />
           </div>
@@ -59,9 +92,10 @@ const App = () => {
               type="password"
               placeholder="Enter password"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-               value={password}
-              onChange={(e) =>{
-                setpassword(e.target.value)
+              required
+              value={password}
+              onChange={(e) => {
+                setpassword(e.target.value);
               }}
             />
           </div>
@@ -72,14 +106,21 @@ const App = () => {
               type="password"
               placeholder="Confirm password"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-               value={confirmpassword}
-              onChange={(e) =>{
-                setconfirmpassword(e.target.value)
+              required
+              value={confirmpassword}
+              onChange={(e) => {
+                setconfirmpassword(e.target.value);
               }}
             />
           </div>
 
-          <button className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-lg mt-4 transition duration-200 shadow-md">
+          {error && (
+            <p className="text-red-600 font-medium text-base text-center">
+              {error}
+            </p>
+          )}
+
+          <button className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-lg mt-3 transition duration-200 shadow-md">
             Submit
           </button>
         </form>
@@ -90,6 +131,7 @@ const App = () => {
             Login
           </span>
         </p>
+        
       </div>
     </div>
   );
