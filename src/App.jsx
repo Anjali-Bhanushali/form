@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import User from "./components/user";
 
 const App = () => {
   const [fullName, setfullName] = useState("");
@@ -7,6 +8,8 @@ const App = () => {
   const [password, setpassword] = useState("");
   const [confirmpassword, setconfirmpassword] = useState("");
   const [error, setError] = useState("");
+
+  const [users, setusers] = useState([]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -28,6 +31,8 @@ const App = () => {
       setError("password must contains any capital letter");
       return;
     }
+
+    setusers([...users,{fullName,email,password}])
 
     setError("");
     setfullName("");
@@ -123,6 +128,7 @@ const App = () => {
           <button className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-lg mt-3 transition duration-200 shadow-md">
             Submit
           </button>
+          <ToastContainer></ToastContainer>
         </form>
 
         <p className="text-center text-sm text-gray-600 mt-5">
@@ -133,6 +139,10 @@ const App = () => {
         </p>
         
       </div>
+
+      {users.map(function(elem){
+        return <User elem={elem} />
+      })}
     </div>
   );
 };
